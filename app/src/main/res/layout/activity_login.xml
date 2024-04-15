@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:background="#E7A87B">
+    tools:context=".LoginActivity">
     <ImageView
         android:id="@+id/backgroundImage"
         android:layout_width="match_parent"
@@ -30,13 +29,13 @@
         android:layout_marginTop="100dp"/>
 
     <EditText
-        android:textColorHint="#8C8484"
         android:id="@+id/etUserEmail"
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:background="@color/white"
         android:paddingLeft="20dp"
         android:hint="email"
+        android:textColorHint="#8C8484"
         android:textColor="@color/black"
         android:layout_marginTop="75dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,7 +45,6 @@
     </EditText>
 
     <EditText
-        android:textColorHint="#8C8484"
         android:textColor="@color/black"
         android:id="@+id/etPassword"
         android:paddingLeft="20dp"
@@ -54,6 +52,7 @@
         android:layout_height="50dp"
         android:background="@color/white"
         android:hint="contraseña"
+        android:textColorHint="#8C8484"
         android:inputType="textPassword"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -62,74 +61,28 @@
 
     </EditText>
 
-    <EditText
-        android:textColor="@color/black"
-        android:textColorHint="#8C8484"
-        android:id="@+id/etConfirmPassword"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="30dp"
-        android:background="@color/white"
-        android:hint="confirma contraseña"
-        android:inputType="textPassword"
-        android:paddingLeft="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etPassword">
-
-    </EditText>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:id="@+id/linearCheck"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etConfirmPassword"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="50dp">
-
-        <CheckBox
-            android:id="@+id/cbConditions"
-            android:layout_weight="1"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:buttonTint="#858E78"
-            android:scaleX="1.2"
-            android:scaleY="1.2">
-        </CheckBox>
-        <TextView
-            android:layout_marginEnd="100dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="@color/white"
-            android:background="#80868F78"
-            android:padding="5dp"
-            android:text="He leído y acepto los términos y condiciones de uso">
-
-        </TextView>
-</LinearLayout>
-
     <androidx.cardview.widget.CardView
-        android:id="@+id/btCreateAccount"
+        android:id="@+id/btAccess"
+        android:layout_marginTop="30dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/linearCheck"
+        app:layout_constraintTop_toBottomOf="@id/etPassword"
         android:backgroundTint="#868F78"
         >
         <TextView
+
             android:padding="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Create Account"
+            android:text="Acceder"
             android:fontFamily="sans-serif-condensed-medium"
             android:textSize="30sp"
             android:textColor="@color/white"
-            android:textAllCaps="true"
-            android:enabled="false">
+            android:textAllCaps="true">
 
         </TextView>
     </androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
