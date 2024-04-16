@@ -1,5 +1,6 @@
 package com.nasch.househero
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -67,6 +68,8 @@ class MainActivity : AppCompatActivity() {
                         ).show()
                         val user = auth.currentUser
                         updateUI(user)
+                        val intent = Intent(this, CreateProfileActivity::class.java)
+                        startActivity(intent)
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "createUserWithEmail:failure", task.exception)
