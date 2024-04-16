@@ -20,7 +20,12 @@ class CreateProfileActivity : AppCompatActivity() {
         binding.spinnerRoles.adapter = adapter
 
         binding.btNext.setOnClickListener{
-            val intent = Intent(this, CreateProfileActivity::class.java)
-            startActivity(intent)        }
+            val selectedRole = binding.spinnerRoles.selectedItem.toString()
+            val intent = when (selectedRole) {
+                "Soy profesional" -> Intent(this, ProfessionalActivity::class.java)
+                else -> Intent(this, SearchServiceActivity::class.java)
+            }
+            startActivity(intent)
+        }
     }
 }

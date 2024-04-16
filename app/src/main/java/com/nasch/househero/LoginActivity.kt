@@ -19,6 +19,10 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         auth = Firebase.auth //aquí hay dos imports, he seleccionado el acabado en ktx
+        binding.tvForgotPassword.setOnClickListener{
+            val intent = Intent(this, ResetPasswordActivity::class.java)
+            startActivity(intent)
+        }
         binding.btAccess.setOnClickListener {
             signIn()
         }
