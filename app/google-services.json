@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "731663192193",
+    "firebase_url": "https://househero-nbsa-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "househero-nbsa",
     "storage_bucket": "househero-nbsa.appspot.com"
   },
