@@ -1,5 +1,6 @@
 package com.nasch.househero
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.ArrayAdapter
@@ -11,6 +12,7 @@ import com.google.firebase.database.FirebaseDatabase
 
 import com.nasch.househero.databinding.ActivityCreateProfileBinding
 import com.nasch.househero.dataclasses.Clientes
+import com.nasch.househero.dataclasses.Profesionales
 
 class CreateProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreateProfileBinding
@@ -61,12 +63,10 @@ class CreateProfileActivity : AppCompatActivity() {
             Toast.LENGTH_SHORT
         ).show()
         }
-
-        val userId = dbRef.push().key!!
-
-        val user = Clientes(userId, userName, userSurname, selectedRole)
-        dbRef.child(userId).setValue(user)
-            .addOnCompleteListener{
+        if(selectedRole.equals("Soy profesional")){
+            val userId = dbRef.push().key!!
+            val user = Profesionales(userId, userName, userSurname, selectedRole)
+            dbRef.child(userId).setValue(user).addOnCompleteListener{
                 Toast.makeText(
                     baseContext,
                     "User information saved.",
@@ -79,6 +79,30 @@ class CreateProfileActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
+        }else {
+
+            val userId = dbRef.push().key!!
+
+            val user = Clientes(userId, userName, userSurname, selectedRole)
+            dbRef.child(userId).setValue(user)
+                .addOnCompleteListener {
+                    Toast.makeText(
+                        baseContext,
+                        "User information saved.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    val intent = Intent(this, ProfileActivity::class.java)
+                    startActivity(intent)
+                }.addOnFailureListener { err ->
+                    Toast.makeText(
+                        baseContext,
+                        "An error has occured.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                }
+        }
     }
 
 }

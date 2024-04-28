@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">HouseHero</string>
     <string name="spinner_title">Seleccione rol</string>
+    <string name="selectServices">Indica el servicio que quieres</string>
+    <string name="categories">Selecciona categoría</string>
+
+
     <string-array name="roles">
         <item>Soy particular</item>
         <item>Soy vecino/a de comunidad</item>
