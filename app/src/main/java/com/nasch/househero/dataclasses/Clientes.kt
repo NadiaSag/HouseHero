@@ -5,4 +5,6 @@ data class Clientes(
     var userName: String? = null,
     var userSurname: String? = null,
     var selectedRole: String? = null,
-)
+    var userLocation: String? = null,
+
+    )

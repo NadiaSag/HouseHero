@@ -25,7 +25,6 @@ class CreateProfileActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Inicializa Firebase
-        dbRef = FirebaseDatabase.getInstance().getReference("Clientes")
 
         val rolesArray = resources.getStringArray(R.array.roles)
         val rolesAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, rolesArray)
@@ -64,6 +63,7 @@ class CreateProfileActivity : AppCompatActivity() {
         ).show()
         }
         if(selectedRole.equals("Soy profesional")){
+            dbRef = FirebaseDatabase.getInstance().getReference("Profesionales")
             val userId = dbRef.push().key!!
             val user = Profesionales(userId, userName, userSurname, selectedRole)
             dbRef.child(userId).setValue(user).addOnCompleteListener{
@@ -72,6 +72,13 @@ class CreateProfileActivity : AppCompatActivity() {
                     "User information saved.",
                     Toast.LENGTH_SHORT
                 ).show()
+                val intent = Intent(this, ProfessionalActivity::class.java)
+                intent.putExtra("userName", userName)
+                intent.putExtra("userSurname", userSurname)
+                intent.putExtra("selectedRole", selectedRole)
+                startActivity(intent)
+                startActivity(intent)
+
             }.addOnFailureListener{ err ->
                 Toast.makeText(
                     baseContext,
@@ -80,6 +87,7 @@ class CreateProfileActivity : AppCompatActivity() {
                 ).show()
             }
         }else {
+            dbRef = FirebaseDatabase.getInstance().getReference("Clientes")
 
             val userId = dbRef.push().key!!
 
