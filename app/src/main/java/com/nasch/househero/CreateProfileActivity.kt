@@ -77,7 +77,6 @@ class CreateProfileActivity : AppCompatActivity() {
                 intent.putExtra("userSurname", userSurname)
                 intent.putExtra("selectedRole", selectedRole)
                 startActivity(intent)
-                startActivity(intent)
 
             }.addOnFailureListener{ err ->
                 Toast.makeText(

@@ -2,53 +2,58 @@ package com.nasch.househero
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.nasch.househero.SealedClasses.Services
-import com.nasch.househero.ServicesRecycler.ServicesAdapter
+import android.widget.TextView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.nasch.househero.databinding.ActivityProfileBinding
 
 class ProfileActivity : AppCompatActivity() {
-    private lateinit var servicesAdapter: ServicesAdapter
-    private lateinit var rvServices: RecyclerView
 
+    private lateinit var binding : ActivityProfileBinding
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_profile)
-        initcomponents()
-        initUI()
+        binding = ActivityProfileBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        val userId = getUserId() // Obtener el ID del usuario actual
+        userId?.let {
+            FirebaseDatabase.getInstance().getReference("Profesionales").child(
+                it
+            )
+        }?.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    val userName = snapshot.child("userName").value.toString()
+                    val userSurname = snapshot.child("userSurname").value.toString()
+                    val selectedRole = snapshot.child("selectedRole").value.toString()
+
+                    // Actualizar la interfaz de usuario con los datos del usuario
+                    updateUI(userName, userSurname, selectedRole)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Manejar el error
+            }
+        })
 
     }
-    private fun initcomponents() {
-        rvServices = findViewById<RecyclerView>(R.id.rvServices)
-
+    private fun updateUI(userName: String, userSurname: String, selectedRole: String) {
+        // Actualizar el TextView dentro del CardView con los datos del usuario
+        binding.cvInfo.findViewById<TextView>(R.id.tvUserInfo).text = "Hola, $userName $userSurname. Rol: $selectedRole"
 
     }
-    private val services = mutableListOf(
-        Services.Fontaneria,
-        Services.Cristaleria,
-        Services.Piscinas,
-        Services.PequeObras,
-        Services.Jardineria,
-        Services.Electricidad,
-        Services.Construccion,
-        Services.Climatizacion,
-        Services.Ascensores,
-        Services.Cerrajeria,
-        Services.Limpieza,
-        Services.Carpinteria,
-        Services.Pintura)
+    private fun getUserId(): String? {
 
-    private fun onCategoriesSelected(position: Int){
-        services[position].isSelected = !services[position].isSelected
-        servicesAdapter.notifyItemChanged(position)
-    }
-    private fun initUI(){
-
-        servicesAdapter = ServicesAdapter(services) {position -> onCategoriesSelected(position)}
-        rvServices.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        rvServices.adapter = servicesAdapter
-        //el orden es súper importante
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        return currentUser?.uid
     }
 }
+
+
+
+
