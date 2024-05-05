@@ -1,5 +1,6 @@
 package com.nasch.househero
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
@@ -19,6 +20,9 @@ class ProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.btSearch.setOnClickListener {
+            buscarUsuarios()
+        }
         val userId = getUserId() // Obtener el ID del usuario actual
         userId?.let {
             FirebaseDatabase.getInstance().getReference("Profesionales").child(
@@ -42,9 +46,16 @@ class ProfileActivity : AppCompatActivity() {
         })
 
     }
+
+    private fun buscarUsuarios() {
+        val intent = Intent(this, SearchServiceActivity::class.java)
+        startActivity(intent)
+    }
+
     private fun updateUI(userName: String, userSurname: String, selectedRole: String) {
         // Actualizar el TextView dentro del CardView con los datos del usuario
-        binding.cvInfo.findViewById<TextView>(R.id.tvUserInfo).text = "Hola, $userName $userSurname. Rol: $selectedRole"
+        binding.cvInfo.findViewById<TextView>(R.id.tvUserInfo).text = "Hola, $userName $userSurname"
+        binding.cvUser.findViewById<TextView>(R.id.tvData).text = "$selectedRole"
 
     }
     private fun getUserId(): String? {
