@@ -109,7 +109,6 @@ class SearchServiceActivity : AppCompatActivity() {
 
         val serviciosSeleccionados = selectedServices.toList() // Convertir el conjunto a una lista
 
-        // Usar un contador para realizar la llamada a iniciarResultsActivity solo una vez
         var resultadosObtenidos = 0
 
         for (serviceName in serviciosSeleccionados) {
@@ -133,7 +132,6 @@ class SearchServiceActivity : AppCompatActivity() {
                             }
                         }
                         resultadosObtenidos++
-                        // Llamar a iniciarResultsActivity solo cuando se hayan obtenido todos los resultados
                         if (resultadosObtenidos == serviciosSeleccionados.size) {
                             iniciarResultsActivity(resultados)
                         }
