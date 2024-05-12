@@ -16,6 +16,8 @@ import com.nasch.househero.databinding.ActivitySearchServiceBinding
 class SearchServiceActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchServiceBinding
     private val selectedServices: MutableSet<String> = mutableSetOf()
+    private val resultados: MutableList<String> = mutableListOf()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,34 +102,29 @@ class SearchServiceActivity : AppCompatActivity() {
     }
 
     private fun buscarUsuarios() {
-        // Construir la consulta Firebase
         val query = FirebaseDatabase.getInstance().getReference("Profesionales")
 
-        // Limpiar el layout de resultados de la búsqueda
-        // Esto es opcional y depende de cómo quieras mostrar los resultados
+        // Limpiar resultados antes de comenzar una nueva búsqueda
+        resultados.clear()
 
-        // Crear una lista para almacenar los resultados
-        val resultados: MutableList<String> = mutableListOf()
+        val serviciosSeleccionados = selectedServices.toList() // Convertir el conjunto a una lista
 
-        // Manejar cada servicio seleccionado
-        for (serviceName in selectedServices) {
-            // Agregar un filtro para cada servicio seleccionado
+        // Usar un contador para realizar la llamada a iniciarResultsActivity solo una vez
+        var resultadosObtenidos = 0
+
+        for (serviceName in serviciosSeleccionados) {
             query.orderByChild("selectedServices")
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
-                        // Manejar los resultados de la búsqueda
                         for (userSnapshot in snapshot.children) {
                             val servicesSnapshot = userSnapshot.child("selectedServices")
                             val userServices = mutableListOf<String>()
                             for (serviceSnapshot in servicesSnapshot.children) {
                                 userServices.add(serviceSnapshot.value.toString())
                             }
-                            // Verificar si el profesional ofrece el servicio seleccionado por el usuario
                             if (userServices.contains(serviceName)) {
-                                // Obtener los datos del usuario
                                 val userName = userSnapshot.child("userName").value.toString()
                                 val userSurname = userSnapshot.child("userSurname").value.toString()
-                                // Agregar el resultado a la lista si no está duplicado
                                 val resultado =
                                     "$userName $userSurname,\n Sevicios que realiza: $serviceName"
                                 if (!resultados.contains(resultado)) {
@@ -135,17 +132,20 @@ class SearchServiceActivity : AppCompatActivity() {
                                 }
                             }
                         }
-                        // Al finalizar la búsqueda, iniciar ResultsActivity y pasar los resultados como extras
-                        iniciarResultsActivity(resultados)
+                        resultadosObtenidos++
+                        // Llamar a iniciarResultsActivity solo cuando se hayan obtenido todos los resultados
+                        if (resultadosObtenidos == serviciosSeleccionados.size) {
+                            iniciarResultsActivity(resultados)
+                        }
                     }
 
                     override fun onCancelled(error: DatabaseError) {
-                        // Manejar el error
                         Log.e("SearchServiceActivity", "Error al buscar usuarios: ${error.message}")
                     }
                 })
         }
     }
+
 
     private fun iniciarResultsActivity(resultados: List<String>) {
         // Crear un Intent para iniciar ResultsActivity
