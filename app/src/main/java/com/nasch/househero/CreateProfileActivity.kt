@@ -2,11 +2,9 @@ package com.nasch.househero
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
@@ -36,13 +34,21 @@ class CreateProfileActivity : AppCompatActivity() {
             val userName = binding.etUserName.text.toString()
             val userSurname = binding.etUserSurname.text.toString()
             val selectedRole = binding.spinnerRoles.selectedItem.toString()
+            val email = binding.etEmail.text.toString()
+            val phoneNumber = binding.etNumber.text.toString()
 
             // Guarda los valores en la base de datos Firebase
-            saveUserInfo(userName, userSurname, selectedRole)
+            saveUserInfo(userName, userSurname, selectedRole, email, phoneNumber)
         }
     }
 
-    private fun saveUserInfo(userName: String, userSurname: String, selectedRole: String) {
+    private fun saveUserInfo(
+        userName: String,
+        userSurname: String,
+        selectedRole: String,
+        email: String,
+        phoneNumber: String
+    ) {
         if (userName.isEmpty()){Toast.makeText(
             baseContext,
             "Escribe nombre.",
@@ -62,10 +68,17 @@ class CreateProfileActivity : AppCompatActivity() {
             Toast.LENGTH_SHORT
         ).show()
         }
+        if (email.isEmpty()){
+            Toast.makeText(
+                baseContext,
+                "Escribe un email de contacto.",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
         if(selectedRole.equals("Soy profesional")){
             dbRef = FirebaseDatabase.getInstance().getReference("Profesionales")
             val userId = dbRef.push().key!!
-            val user = Profesionales(userId, userName, userSurname, selectedRole)
+            val user = Profesionales(userId, userName, userSurname, selectedRole, email, phoneNumber)
             dbRef.child(userId).setValue(user).addOnCompleteListener{
                 Toast.makeText(
                     baseContext,
@@ -76,6 +89,8 @@ class CreateProfileActivity : AppCompatActivity() {
                 intent.putExtra("userName", userName)
                 intent.putExtra("userSurname", userSurname)
                 intent.putExtra("selectedRole", selectedRole)
+                intent.putExtra("email", email)
+                intent.putExtra("phoneNumber", phoneNumber)
                 startActivity(intent)
 
             }.addOnFailureListener{ err ->

@@ -1,5 +1,6 @@
 package com.nasch.househero
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -13,7 +14,7 @@ import com.google.firebase.database.ValueEventListener
 import com.nasch.househero.databinding.ActivitySearchServiceBinding
 
 class SearchServiceActivity : AppCompatActivity() {
-    private lateinit var binding : ActivitySearchServiceBinding
+    private lateinit var binding: ActivitySearchServiceBinding
     private val selectedServices: MutableSet<String> = mutableSetOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,12 +54,13 @@ class SearchServiceActivity : AppCompatActivity() {
         })
 
     }
+
     private fun updateUI(userName: String, userSurname: String, selectedRole: String) {
         // Actualizar el TextView dentro del CardView con los datos del usuario
         binding.cvInfo.findViewById<TextView>(R.id.tvGreetings).text = "Hola, $userName $userSurname"
     }
-    private fun getUserId(): String? {
 
+    private fun getUserId(): String? {
         val currentUser = FirebaseAuth.getInstance().currentUser
         return currentUser?.uid
     }
@@ -96,6 +98,7 @@ class SearchServiceActivity : AppCompatActivity() {
             }
         }
     }
+
     private fun buscarUsuarios() {
         // Construir la consulta Firebase
         val query = FirebaseDatabase.getInstance().getReference("Profesionales")
@@ -126,15 +129,14 @@ class SearchServiceActivity : AppCompatActivity() {
                                 val userSurname = userSnapshot.child("userSurname").value.toString()
                                 // Agregar el resultado a la lista si no está duplicado
                                 val resultado =
-                                    "Nombre: $userName, Apellido: $userSurname, Servicio: $serviceName"
+                                    "$userName $userSurname,\n Sevicios que realiza: $serviceName"
                                 if (!resultados.contains(resultado)) {
                                     resultados.add(resultado)
                                 }
                             }
                         }
-                        for (resultado in resultados) {
-                            Log.d("SearchServiceActivity", resultado)
-                        }
+                        // Al finalizar la búsqueda, iniciar ResultsActivity y pasar los resultados como extras
+                        iniciarResultsActivity(resultados)
                     }
 
                     override fun onCancelled(error: DatabaseError) {
@@ -143,4 +145,16 @@ class SearchServiceActivity : AppCompatActivity() {
                     }
                 })
         }
-    }}
+    }
+
+    private fun iniciarResultsActivity(resultados: List<String>) {
+        // Crear un Intent para iniciar ResultsActivity
+        val intent = Intent(this, ResultsActivity::class.java)
+        // Pasar los resultados como extras en el Intent
+        intent.putStringArrayListExtra("resultados", ArrayList(resultados))
+        // Iniciar la actividad
+        startActivity(intent)
+    }
+
+
+}

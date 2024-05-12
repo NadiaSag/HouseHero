@@ -40,7 +40,7 @@
         android:paddingLeft="20dp"
         android:hint="Nombre"
         android:textColor="@color/black"
-        android:layout_marginTop="75dp"
+        android:layout_marginTop="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cvInfo">
@@ -58,16 +58,47 @@
         android:hint="Apellidos"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintTop_toBottomOf="@+id/etUserName">
 
     </EditText>
+    <EditText
 
+        android:textColorHint="#8C8484"
+        android:textColor="@color/black"
+        android:id="@+id/etEmail"
+        android:paddingLeft="20dp"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:hint="email@example.com"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/etUserSurname">
 
+    </EditText>
+
+    <EditText
+
+        android:textColorHint="#8C8484"
+        android:textColor="@color/black"
+        android:id="@+id/etNumber"
+        android:inputType="number"
+        android:paddingLeft="20dp"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/etEmail">
+
+    </EditText>
 
     <Spinner
         android:layout_marginBottom="100dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
     android:id="@+id/spinner_roles"
     android:layout_width="250dp"
         android:background="@color/white"
@@ -75,7 +106,7 @@
     android:spinnerMode="dropdown"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etUserSurname"/>
+        app:layout_constraintTop_toBottomOf="@id/etNumber"/>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/btNext"
@@ -83,7 +114,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/spinner_roles"
         android:backgroundTint="@color/green_househero_100"

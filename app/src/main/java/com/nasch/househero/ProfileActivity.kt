@@ -15,7 +15,6 @@ class ProfileActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityProfileBinding
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProfileBinding.inflate(layoutInflater)
@@ -25,26 +24,49 @@ class ProfileActivity : AppCompatActivity() {
         }
         val userId = getUserId() // Obtener el ID del usuario actual
         userId?.let {
-            FirebaseDatabase.getInstance().getReference("Profesionales").child(
-                it
-            )
-        }?.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.exists()) {
-                    val userName = snapshot.child("userName").value.toString()
-                    val userSurname = snapshot.child("userSurname").value.toString()
-                    val selectedRole = snapshot.child("selectedRole").value.toString()
+            // Consultar si el usuario es un profesional
+            FirebaseDatabase.getInstance().getReference("Profesionales").child(it)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(professionalSnapshot: DataSnapshot) {
+                        if (professionalSnapshot.exists()) {
+                            val userName = professionalSnapshot.child("userName").value.toString()
+                            val userSurname = professionalSnapshot.child("userSurname").value.toString()
+                            val selectedRole = professionalSnapshot.child("selectedRole").value.toString()
 
-                    // Actualizar la interfaz de usuario con los datos del usuario
-                    updateUI(userName, userSurname, selectedRole)
+                            // Actualizar la interfaz de usuario con los datos del profesional
+                            updateUI(userName, userSurname, selectedRole)
+                        } else {
+                            // Si el usuario no es un profesional, buscar en los clientes
+                            buscarCliente(it)
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        // Manejar el error
+                    }
+                })
+        }
+    }
+
+    private fun buscarCliente(userId: String) {
+        // Consultar si el usuario es un cliente
+        FirebaseDatabase.getInstance().getReference("Clientes").child(userId)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(clientSnapshot: DataSnapshot) {
+                    if (clientSnapshot.exists()) {
+                        val userName = clientSnapshot.child("userName").value.toString()
+                        val userSurname = clientSnapshot.child("userSurname").value.toString()
+                        val selectedRole = clientSnapshot.child("selectedRole").value.toString()
+
+                        // Actualizar la interfaz de usuario con los datos del cliente
+                        updateUI(userName, userSurname, selectedRole)
+                    }
                 }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                // Manejar el error
-            }
-        })
-
+                override fun onCancelled(error: DatabaseError) {
+                    // Manejar el error
+                }
+            })
     }
 
     private fun buscarUsuarios() {
@@ -56,10 +78,9 @@ class ProfileActivity : AppCompatActivity() {
         // Actualizar el TextView dentro del CardView con los datos del usuario
         binding.cvInfo.findViewById<TextView>(R.id.tvUserInfo).text = "Hola, $userName $userSurname"
         binding.cvUser.findViewById<TextView>(R.id.tvData).text = "$selectedRole"
-
     }
-    private fun getUserId(): String? {
 
+    private fun getUserId(): String? {
         val currentUser = FirebaseAuth.getInstance().currentUser
         return currentUser?.uid
     }

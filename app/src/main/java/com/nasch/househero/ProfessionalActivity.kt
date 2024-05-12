@@ -1,5 +1,6 @@
 package com.nasch.househero
 
+import ServicesAdapter
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,7 +10,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.nasch.househero.SealedClasses.Services
-import com.nasch.househero.ServicesRecycler.ServicesAdapter
 import com.nasch.househero.databinding.ActivityProfessionalBinding
 import com.nasch.househero.dataclasses.Profesionales
 
@@ -73,6 +73,8 @@ class ProfessionalActivity : AppCompatActivity() {
         val userName = intent.getStringExtra("userName")
         val userSurname = intent.getStringExtra("userSurname")
         val selectedRole = intent.getStringExtra("selectedRole")
+        val email = intent.getStringExtra("email")
+        val phoneNumber = intent.getStringExtra("phoneNumber")
         // Obtener referencias a todos los CheckBox
         val checkBoxes = arrayOf(
             binding.cbFontaneria,
@@ -103,7 +105,7 @@ class ProfessionalActivity : AppCompatActivity() {
                 }
 
                 // Guardar los servicios seleccionados en Firebase
-                saveDataToFirebase(userName, userSurname,selectedRole, selectedServices)
+                saveDataToFirebase(userName, userSurname,selectedRole, email, phoneNumber, selectedServices)
             }
         }
     }
@@ -112,6 +114,8 @@ class ProfessionalActivity : AppCompatActivity() {
         username: String?,
         userSurname: String?,
         selectedRole: String?,
+        email: String?,
+        phoneNumber: String?,
         selectedServices: MutableSet<String>
     ) {
         // Obtiene una referencia al nodo del usuario actual
@@ -124,6 +128,8 @@ class ProfessionalActivity : AppCompatActivity() {
             username,
             userSurname,
             selectedRole,
+            email,
+            phoneNumber,
             selectedServices.toList() // Convierte el conjunto de servicios a una lista
         )
 

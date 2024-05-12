@@ -1,13 +1,12 @@
-package com.nasch.househero.ServicesRecycler
-
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.nasch.househero.R
-import com.nasch.househero.SealedClasses.Services
 
-class ServicesAdapter(private val categories: List<Services>, private val onItemSelected: (Int) -> Unit) :
-    RecyclerView.Adapter<ServicesViewHolder>() {
+class ServicesAdapter : RecyclerView.Adapter<ServicesViewHolder>() {
+    private var listaResultados: List<String> = listOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ServicesViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_services, parent, false)
@@ -15,9 +14,16 @@ class ServicesAdapter(private val categories: List<Services>, private val onItem
     }
 
     override fun onBindViewHolder(holder: ServicesViewHolder, position: Int) {
-        holder.render(categories[position], onItemSelected)
-
+        val resultado = listaResultados[position]
+        holder.bind(resultado)
     }
 
-    override fun getItemCount() =  categories.size
+    override fun getItemCount(): Int {
+        return listaResultados.size
+    }
+
+    fun actualizarResultados(nuevaLista: List<String>) {
+        listaResultados = nuevaLista
+        notifyDataSetChanged()
+    }
 }
