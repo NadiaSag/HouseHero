@@ -105,7 +105,7 @@ class SearchServiceActivity : AppCompatActivity() {
         val query = FirebaseDatabase.getInstance().getReference("Profesionales")
 
         // Limpiar resultados antes de comenzar una nueva búsqueda
-        resultados.clear()
+        val resultados = mutableSetOf<String>()
 
         val serviciosSeleccionados = selectedServices.toList() // Convertir el conjunto a una lista
 
@@ -124,16 +124,15 @@ class SearchServiceActivity : AppCompatActivity() {
                             if (userServices.contains(serviceName)) {
                                 val userName = userSnapshot.child("userName").value.toString()
                                 val userSurname = userSnapshot.child("userSurname").value.toString()
+                                val servicios = userServices.joinToString(", ") // Unir servicios en un string separado por comas
                                 val resultado =
-                                    "$userName $userSurname,\n Sevicios que realiza: $serviceName"
-                                if (!resultados.contains(resultado)) {
-                                    resultados.add(resultado)
-                                }
+                                    "$userName $userSurname,\n Servicios que realiza: $servicios"
+                                resultados.add(resultado)
                             }
                         }
                         resultadosObtenidos++
                         if (resultadosObtenidos == serviciosSeleccionados.size) {
-                            iniciarResultsActivity(resultados)
+                            iniciarResultsActivity(resultados.toList())
                         }
                     }
 
@@ -145,6 +144,8 @@ class SearchServiceActivity : AppCompatActivity() {
     }
 
 
+
+
     private fun iniciarResultsActivity(resultados: List<String>) {
         // Crear un Intent para iniciar ResultsActivity
         val intent = Intent(this, ResultsActivity::class.java)
@@ -153,6 +154,5 @@ class SearchServiceActivity : AppCompatActivity() {
         // Iniciar la actividad
         startActivity(intent)
     }
-
 
 }
